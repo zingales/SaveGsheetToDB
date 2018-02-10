@@ -23,6 +23,10 @@ def get_all_events(logsSheet):
 			#this is the first row ignore it
 			continue
 
+		if row[0] == "" or row[0] is None:
+			# We don't want to save empty rows
+			continue
+
 		events.append(Event(row[0],row[1], row[2], row[3], row[4]))
 
 	return events
