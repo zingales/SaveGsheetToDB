@@ -40,7 +40,7 @@ def log_in(creds_path):
 	return gc
 
 def save_events_to_db(event_list):
-	db = SqliteEventDb("events.db")
+	db = SqliteEventDb("../events.db")
 	db.save_events(event_list)
 
 
@@ -48,7 +48,7 @@ def delete_saved_events(worksheet, number_events_saved):
 	for i in range(number_events_saved):
 		worksheet.delete_row(2)
 
-path = '/Users/gzingale/Downloads/SmartthingsEvents-2e63a60cb811.json'
+path = '../SmartthingsEvents-2e63a60cb811.json'
 
 gc = log_in(path)
 
