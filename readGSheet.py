@@ -1,5 +1,6 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from SqliteEventDb import *
 
 
 
@@ -12,13 +13,7 @@ class Event(object):
 		self.event_value = event_value
 		self.event_descprition = event_descprition
 
-def get_all_events(logBook):
-	logsSheet = logsBook.get_worksheet(0)
-
-# 	val = logsSheet.acell('B3').value
-
-# print val
-
+def get_all_events(logsSheet):
 
 	events = []
 
@@ -28,11 +23,6 @@ def get_all_events(logBook):
 			#this is the first row ignore it
 			continue
 
-		# print row[0]
-		# print row[1]
-		# print row[2]
-		# print row[3]
-		# print row[4]
 		events.append(Event(row[0],row[1], row[2], row[3], row[4]))
 
 	return events
@@ -44,16 +34,19 @@ def log_in(creds_path):
 	scope = ['https://spreadsheets.google.com/feeds']
 
 	credentials = ServiceAccountCredentials.from_json_keyfile_name(creds_path, scope)
-	# credentials = ServiceAccountCredentials.from_json_keyfile_name('/Users/gzingale/Downloads/ClientSecret.json', scope)
 
 	gc = gspread.authorize(credentials)
 
 	return gc
 
-# wks = gc.openall()
+def save_events_to_db(event_list):
+	db = SqliteEventDb("events.db")
+	db.save_events(event_list)
 
-# print wks 
-# print len(wks)
+
+def delete_saved_events(worksheet, number_events_saved):
+	for i in range(number_events_saved):
+		worksheet.delete_row(2)
 
 path = '/Users/gzingale/Downloads/SmartthingsEvents-2e63a60cb811.json'
 
@@ -61,10 +54,21 @@ gc = log_in(path)
 
 logsBook = gc.open_by_key('1htjOj1B9jdm-eRvV7_52ARj9wjNijTJ3ZPz53-LcqXY')
 
-events = get_all_events(logsBook)
+logsSheet = logsBook.get_worksheet(0)
+
+events = get_all_events(logsSheet)
+
+print len(events), " were downloaded"
+
+save_events_to_db(events)
+
+print len(events), " were saved"
+
+delete_saved_events(logsSheet, len(events))
+
+print len(events), " were deleted"
 
 print events[0].time
 
 print len(events)
-
 
