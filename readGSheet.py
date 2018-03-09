@@ -62,17 +62,17 @@ logsSheet = logsBook.get_worksheet(0)
 
 events = get_all_events(logsSheet)
 
-print len(events), " were downloaded"
+print(len(events), " were downloaded")
 
 save_events_to_db(events)
 
-print len(events), " were saved"
+print(len(events), " were saved")
 
 delete_saved_events(logsSheet, len(events))
 
-print len(events), " were deleted"
+print(len(events), " were deleted")
 
-print events[0].time
+print(events[0].time)
 
-print len(events)
+print(len(events))
 
